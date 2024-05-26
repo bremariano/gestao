@@ -35,7 +35,6 @@ class CategoriaModelo
 //        $query = "INSERT INTO `categoria` (:id, `title`, `content`, `status`) VALUES (:id, :title, :content, :status);";
         $query = "INSERT INTO `categoria` (`title`, `content`, `status`) VALUES (:title, :content, :status);";
         $stmt = Conexao::getInstancia()->prepare($query);;
-//        $stmt->execute([$dados['title'],$dados['content'],$dados['status']]);
         $stmt->execute($dados);
     }
     
