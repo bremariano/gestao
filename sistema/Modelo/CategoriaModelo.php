@@ -13,6 +13,15 @@ class CategoriaModelo
 {
     public function busca(): array
     {
+
+//        $query = "SELECT * FROM `categoria`";
+//        if(isset($dados['search'])){
+//
+//            $query .=  " where status = '".$dados['search']."'";
+//            $query .=  " OR title like '%$search%'";
+//
+//        }
+
         $query = "SELECT * FROM `categoria` WHERE status = 1 ORDER BY id DESC";
         $stmt = Conexao::getInstancia()->query($query);
         $resultado = $stmt->fetchAll();
