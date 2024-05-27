@@ -27,7 +27,7 @@ class AdminPosts extends AdminControlador
               (new PostModelo())->armazenar($dados);
              Helpers::redirecionar('admin/posts/listar');
          }
-         
+
         echo $this->template->renderizar('posts/formulario.html', [
             'categorias' => (new CategoriaModelo())->busca()
         ]);
@@ -37,7 +37,7 @@ class AdminPosts extends AdminControlador
         $post = (new PostModelo())->buscaPorId($id);
         $dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
         if(isset($dados)){
-
+            (new PostModelo())->atualizar($dados, $id);
             Helpers::redirecionar('admin/posts/listar');
         }
 

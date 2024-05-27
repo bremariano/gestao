@@ -41,8 +41,15 @@ class CategoriaModelo
 
     public function armazenar(array $dados):void
     {
-//        $query = "INSERT INTO `categoria` (:id, `title`, `content`, `status`) VALUES (:id, :title, :content, :status);";
-        $query = "INSERT INTO `categoria` (`title`, `content`, `status`) VALUES (:title, :content, :status);";
+//        $query = "INSERT INTO `categoria` (:id, `title`, `content`, `status`) VALUES (:id, :title, :content, :status)"; obs: id ja tem um valor padrão
+        $query = "INSERT INTO `categoria` (`title`, `content`, `status`) VALUES (?, ?, ?);";
+        $stmt = Conexao::getInstancia()->prepare($query);
+        $stmt->execute($dados);
+    }
+
+    public function atualizar(array $dados, int $id):void
+    {
+        $query = "UPDATE `categoria` SET `title` = ?, `content` = ?, `status` = ? WHERE id = {$id}";
         $stmt = Conexao::getInstancia()->prepare($query);
         $stmt->execute($dados);
     }

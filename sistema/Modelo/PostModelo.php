@@ -47,5 +47,14 @@ class PostModelo
         $stmt = Conexao::getInstancia()->prepare($query);
         $stmt->execute($dados);
     }
+
+    public function atualizar(array $dados, int $id):void
+    {
+
+        $query = "UPDATE `posts` SET `categoria_id` = :categoria_id, `titulo` = :titulo, `texto` = :texto, `status` = :status WHERE id = {$id} ";
+
+        $stmt = Conexao::getInstancia()->prepare($query);
+        $stmt->execute($dados);
+    }
     
 }
