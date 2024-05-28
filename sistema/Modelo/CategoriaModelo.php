@@ -11,7 +11,7 @@ use sistema\Nucleo\Conexao;
  */
 class CategoriaModelo
 {
-    public function busca(): array
+   public function busca(): array
     {
 
 //        $query = "SELECT * FROM `categoria`";
@@ -38,20 +38,24 @@ class CategoriaModelo
         return $resultado; 
     }
 
-
     public function armazenar(array $dados):void
     {
-//        $query = "INSERT INTO `categoria` (:id, `title`, `content`, `status`) VALUES (:id, :title, :content, :status)"; obs: id ja tem um valor padrão
-        $query = "INSERT INTO `categoria` (`title`, `content`, `status`) VALUES (?, ?, ?);";
+        $query = "INSERT INTO `categorias` (`title`, `content`, `status`) VALUES (?, ?, ?)";
         $stmt = Conexao::getInstancia()->prepare($query);
-        $stmt->execute($dados);
+        $stmt->execute([$dados['title'],$dados['content'],$dados['status']]);
     }
 
     public function atualizar(array $dados, int $id):void
     {
-        $query = "UPDATE `categoria` SET `title` = ?, `content` = ?, `status` = ? WHERE id = {$id}";
+        $query = "UPDATE categorias SET title = ?, content = ?, status = ? WHERE id = {$id} ";
         $stmt = Conexao::getInstancia()->prepare($query);
-        $stmt->execute($dados);
+        $stmt->execute([$dados['title'],$dados['content'],$dados['status']]);
+    }
+    public function deletar(int $id):void
+    {
+        $query = "DELETE FROM categoria WHERE `id` = {$id}";
+        $stmt = Conexao::getInstancia()->prepare($query);
+        $stmt->execute();
     }
     
 }
