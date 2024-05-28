@@ -11,9 +11,10 @@ use sistema\Nucleo\Conexao;
  */
 class PostModelo
 {
-    public function busca(): array
+    public function busca(?string $termo = null): array
     {
-        $query = "SELECT * FROM posts WHERE status = 1 ORDER BY id DESC "; 
+        $termo = ($termo ? "WHERE {$termo}" : '');
+        $query = "SELECT * FROM posts {$termo} ";
         $stmt = Conexao::getInstancia()->query($query);
         $resultado = $stmt->fetchAll();
 
@@ -61,6 +62,14 @@ class PostModelo
         $query = "DELETE FROM posts WHERE `id` = {$id}";
         $stmt = Conexao::getInstancia()->prepare($query);
         $stmt->execute();
+    }
+    public function total(?string $termo = null):int
+    {
+        $termo = ($termo ? "WHERE {$termo}" : '');
+        $query = "SELECT * FROM posts {$termo}";
+        $stmt = Conexao::getInstancia()->prepare($query);
+        $stmt->execute();
+        return $stmt->rowCount();
     }
     
 }

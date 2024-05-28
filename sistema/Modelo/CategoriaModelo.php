@@ -11,7 +11,7 @@ use sistema\Nucleo\Conexao;
  */
 class CategoriaModelo
 {
-   public function busca(): array
+   public function busca(?string $termo = null): array
     {
 
 //        $query = "SELECT * FROM `categoria`";
@@ -22,12 +22,13 @@ class CategoriaModelo
 //
 //        }
 
-        $query = "SELECT * FROM `categoria` WHERE status = 1 ORDER BY id DESC";
-        $stmt = Conexao::getInstancia()->query($query);
-        $resultado = $stmt->fetchAll();
+       $termo = ($termo ? "WHERE {$termo}" : '');
+       $query = "SELECT * FROM categoria {$termo} ";
+       $stmt = Conexao::getInstancia()->query($query);
+       $resultado = $stmt->fetchAll();
 
-        return $resultado;        
-    }
+       return $resultado;
+   }
     
     public function buscaPorId(int $id): bool|object
     {
@@ -56,6 +57,14 @@ class CategoriaModelo
         $query = "DELETE FROM categoria WHERE `id` = {$id}";
         $stmt = Conexao::getInstancia()->prepare($query);
         $stmt->execute();
+    }
+    public function total(?string $termo = null):int
+    {
+        $termo = ($termo ? "WHERE {$termo}" : '');
+        $query = "SELECT * FROM categoria {$termo}";
+        $stmt = Conexao::getInstancia()->prepare($query);
+        $stmt->execute();
+        return $stmt->rowCount();
     }
     
 }
