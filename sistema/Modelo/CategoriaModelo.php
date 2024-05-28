@@ -40,14 +40,14 @@ class CategoriaModelo
 
     public function armazenar(array $dados):void
     {
-        $query = "INSERT INTO `categorias` (`title`, `content`, `status`) VALUES (?, ?, ?)";
+        $query = "INSERT INTO `categoria` (`title`, `content`, `status`) VALUES (?, ?, ?)";
         $stmt = Conexao::getInstancia()->prepare($query);
         $stmt->execute([$dados['title'],$dados['content'],$dados['status']]);
     }
 
     public function atualizar(array $dados, int $id):void
     {
-        $query = "UPDATE categorias SET title = ?, content = ?, status = ? WHERE id = {$id} ";
+        $query = "UPDATE `categoria` SET title = ?, content = ?, status = ? WHERE id = {$id} ";
         $stmt = Conexao::getInstancia()->prepare($query);
         $stmt->execute([$dados['title'],$dados['content'],$dados['status']]);
     }
