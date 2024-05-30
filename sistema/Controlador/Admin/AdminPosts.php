@@ -27,18 +27,25 @@ class AdminPosts extends AdminControlador
     }
     
      public function cadastrar():void
-    {
+     {
          $dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
-         if(isset($dados)){
-              (new PostModelo())->armazenar($dados);
-              $this->mensagem->sucesso('Post cadastrado com sucesso') ->flash();
-             Helpers::redirecionar('admin/posts/listar');
-         }
+         if (isset($dados)) {
+             $post = new PostModelo();
+             $post->titulo = $dados['titulo'];
+             $post->categoria_id = $dados['categoria_id'];
+             $post->texto = $dados['texto'];
+             $post->status = $dados['status'];
 
-        echo $this->template->renderizar('posts/formulario.html', [
-            'categorias' => (new CategoriaModelo())->busca()
-        ]);
-    }
+             if ($post->salvar()) {
+                 $this->mensagem->sucesso('Post cadastrado com sucesso')->flash();
+                 Helpers::redirecionar('admin/posts/listar');
+             }
+
+         }
+             echo $this->template->renderizar('posts/formulario.html', [
+                 'categorias' => (new CategoriaModelo())->busca()
+             ]);
+         }
     public function editar(int $id):void
     {
         $post = (new PostModelo())->buscaPorId($id);

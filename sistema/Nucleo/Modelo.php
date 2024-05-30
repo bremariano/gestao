@@ -3,6 +3,7 @@
 namespace sistema\Nucleo;
 
 use sistema\Nucleo\Conexao;
+use sistema\Nucleo\Mensagem;
 
 class Modelo
 {
@@ -14,10 +15,12 @@ protected string $tabela;
 protected $ordem;
 protected $limite;
 protected $offset;
+protected $mensagem;
 
 public function __construct(string $tabela)
 {
     $this->tabela = $tabela;
+    $this->mensagem = new Mensagem();
 }
 
 public function ordem(string $ordem)
@@ -38,7 +41,24 @@ return $this;
         return $this;
     }
 
-public function busca(?string $termos = null, ?string $parametros = null, string $colunas = '*')
+    public function erro()
+    {
+return $this->erro;
+    }
+
+    public function mensagem()
+    {
+return $this->mensagem;
+    }
+    public function __set($nome, $valor)
+    {
+        if (empty($this->dados)){
+            $this->dados = new \stdClass();
+        }
+        $this->dados->$nome = $valor;
+    }
+
+    public function busca(?string $termos = null, ?string $parametros = null, string $colunas = '*')
 {
 if ($termos){
     $this->query = "SELECT {$colunas} FROM ".$this->tabela." WHERE {$termos} ";
@@ -72,7 +92,7 @@ protected function cadastrar(array $dados)
     try {
         $colunas = implode(',', array_keys($dados));
         $valores = ':'.implode(',:', array_keys($dados));
-        $query = "INSERT INTO ".$this->tabela." ($colunas) VALUES ({$valores})";
+        $query = "INSERT INTO ".$this->tabela." ({$colunas}) VALUES ({$valores})";
         $stmt = Conexao::getInstancia()->prepare($query);
         $stmt->execute($this->filtro($dados));
         return Conexao::getInstancia()->lastInsertId();
@@ -104,5 +124,22 @@ $filtro = [];
 foreach ($dados as $chave => $valor){
     $filtro[$chave] = (is_null($valor) ? null : filter_var($valor, FILTER_DEFAULT));
 }
+return $filtro;
+}
+protected function armazenar()
+{
+$dados = (array) $this->dados;
+return $dados;
+}
+
+public function salvar()
+{
+    if (empty($this->id)){
+        $this->cadastrar($this->armazenar());
+        if ($this->erro){}
+        $this->mensagem->erro('Erro de sistema ao tentar cadastrar os dados');
+        return false;
+    }
+return true;
 }
 }
