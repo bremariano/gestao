@@ -21,7 +21,7 @@ class SiteControlador extends Controlador
      */
     public function index(): void
     {
-        $posts = (new PostModelo())->busca();
+        $posts = (new PostModelo())->busca(null, 'rand()');
         
         echo $this->template->renderizar('index.html', [
             'posts' => $posts,
