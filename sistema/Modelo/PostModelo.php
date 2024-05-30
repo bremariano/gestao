@@ -3,26 +3,22 @@
 namespace sistema\Modelo;
 
 use sistema\Nucleo\Conexao;
+use sistema\Nucleo\Modelo;
 
 /**
  * Classe PostModelo
  *
  * @author Breno Mariano
  */
-class PostModelo
+class PostModelo extends Modelo
 {
     const Tabela = 'posts';
-    public function busca(?string $termo = null, ?string $ordem = null): array
-    {
-        $termo = ($termo ? "WHERE {$termo}" : '');
-        $ordem = ($ordem ? "ORDER BY {$ordem}" : '');
-        $query = "SELECT * FROM ".self::Tabela." {$termo} {$ordem} ";
-        $stmt = Conexao::getInstancia()->query($query);
-        $resultado = $stmt->fetchAll();
 
-        return $resultado;        
+    public function __construct()
+    {
+        parent::__construct('posts');
     }
-    
+
     public function buscaPorId(int $id): bool|object
     {
         $query = "SELECT * FROM ".self::Tabela." WHERE id = {$id} ";

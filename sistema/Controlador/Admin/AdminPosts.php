@@ -17,7 +17,7 @@ class AdminPosts extends AdminControlador
     {
         $post = new PostModelo();
         echo $this->template->renderizar('posts/listar.html', [
-            'posts' => $post->busca(null, 'status ASC, id DESC'),
+            'posts' => $post ->busca() ->ordem('status ASC, id DESC')->resultado(true),
             'total' => [
                 'total' => $post->total(),
                 'ativo' => $post ->total('status = 1'),
