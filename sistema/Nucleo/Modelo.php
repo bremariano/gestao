@@ -152,7 +152,26 @@ public function buscaPorId(int $id)
 $busca= $this->busca("id ={$id}");
 return $busca->resultado();
 }
+    public function apagar(string $termos)
+    {
+        try {
+            $query = "DELETE FROM ".$this->tabela." WHERE {$termos}";
+            $stmt = Conexao::getInstancia()->prepare($query);
+            $stmt->execute();
 
+            return true;
+
+        } catch (\PDOException $ex) {
+            $this->erro = $ex->getMessage();
+            return null;
+        }
+    }
+    public function total():int
+    {
+        $stmt = Conexao::getInstancia()->prepare($this->query);
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
     public function salvar()
     {
         //CADASTRAR

@@ -74,8 +74,23 @@ class AdminPosts extends AdminControlador
     }
         public function deletar(int $id): void
         {
-            (new PostModelo())->deletar($id);
-            Helpers::redirecionar('admin/posts/listar');
+//            $id = filter_var($id, FILTER_VALIDATE_INT);
+            if(is_int($id)){
+                $post = (new PostModelo())->buscaPorId($id);
+                if(!$post){
+                    $this->mensagem->alerta('O post que voce esta tentando deletar não existe!')->flash();
+                    Helpers::redirecionar('admin/posts/listar');
+                }else{
+                    if ($post->apagar("id = {$id}")){
+                        $this->mensagem->sucesso('Post deletado com sucesso!')->flash();
+                        Helpers::redirecionar('admin/posts/listar');
+                    }else{
+                        $this->mensagem->erro($post->erro())->flash();
+                        Helpers::redirecionar('admin/posts/listar');
+                    }
+
+                }
+            }
         }
     }
 
