@@ -13,47 +13,58 @@ use sistema\Nucleo\Helpers;
  */
 class AdminPosts extends AdminControlador
 {
-    public function listar():void
+    public function listar(): void
     {
         $post = new PostModelo();
         echo $this->template->renderizar('posts/listar.html', [
-            'posts' => $post ->busca() ->ordem('status ASC, id DESC')->resultado(true),
+            'posts' => $post->busca()->ordem('status ASC, id DESC')->resultado(true),
             'total' => [
                 'total' => $post->total(),
-                'ativo' => $post ->total('status = 1'),
-                'inativo' => $post ->total('status = 0')
+                'ativo' => $post->total('status = 1'),
+                'inativo' => $post->total('status = 0')
             ]
         ]);
     }
-    
-     public function cadastrar():void
-     {
-         $dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
-         if (isset($dados)) {
-             $post = new PostModelo();
-             $post->titulo = $dados['titulo'];
-             $post->categoria_id = $dados['categoria_id'];
-             $post->texto = $dados['texto'];
-             $post->status = $dados['status'];
 
-             if ($post->salvar()) {
-                 $this->mensagem->sucesso('Post cadastrado com sucesso')->flash();
-                 Helpers::redirecionar('admin/posts/listar');
-             }
+    public function cadastrar(): void
+    {
+        $dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
+        if (isset($dados)) {
+            $post = new PostModelo();
+            $post->titulo = $dados['titulo'];
+            $post->categoria_id = $dados['categoria_id'];
+            $post->texto = $dados['texto'];
+            $post->status = $dados['status'];
 
-         }
-             echo $this->template->renderizar('posts/formulario.html', [
-                 'categorias' => (new CategoriaModelo())->busca()
-             ]);
-         }
-    public function editar(int $id):void
+            if ($post->salvar()) {
+                $this->mensagem->sucesso('Post cadastrado com sucesso')->flash();
+                Helpers::redirecionar('admin/posts/listar');
+            }
+
+        }
+        echo $this->template->renderizar('posts/formulario.html', [
+            'categorias' => (new CategoriaModelo())->busca()
+        ]);
+    }
+
+    public function editar(int $id): void
     {
         $post = (new PostModelo())->buscaPorId($id);
+
         $dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
-        if(isset($dados)){
-            (new PostModelo())->atualizar($dados, $id);
-            $this->mensagem->sucesso('Post editado com sucesso')->flash();
-            Helpers::redirecionar('admin/posts/listar');
+        if (isset($dados)) {
+
+            $post = (new PostModelo())->buscaPorId($id);
+
+            $post->titulo = $dados['titulo'];
+            $post->categoria_id = $dados['categoria_id'];
+            $post->texto = $dados['texto'];
+            $post->status = $dados['status'];
+
+            if ($post->salvar()) {
+                $this->mensagem->sucesso('Post atualizado com sucesso')->flash();
+                Helpers::redirecionar('admin/posts/listar');
+            }
         }
 
         echo $this->template->renderizar('posts/formulario.html', [
@@ -61,9 +72,10 @@ class AdminPosts extends AdminControlador
             'categorias' => (new CategoriaModelo())->busca()
         ]);
     }
-    public function deletar(int $id):void
-    {
-        (new PostModelo())->deletar($id);
-        Helpers::redirecionar('admin/posts/listar');
+        public function deletar(int $id): void
+        {
+            (new PostModelo())->deletar($id);
+            Helpers::redirecionar('admin/posts/listar');
+        }
     }
-}
+

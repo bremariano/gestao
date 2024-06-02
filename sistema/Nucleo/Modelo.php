@@ -50,12 +50,24 @@ return $this->erro;
     {
 return $this->mensagem;
     }
+    public function dados()
+    {
+return $this->dados;
+    }
     public function __set($nome, $valor)
     {
         if (empty($this->dados)){
             $this->dados = new \stdClass();
         }
         $this->dados->$nome = $valor;
+    }
+    public function __isset($nome)
+    {
+        return isset($this->dados->$nome);
+    }
+    public function __get($nome)
+    {
+        return $this->dados->$nome ?? null;
     }
 
     public function busca(?string $termos = null, ?string $parametros = null, string $colunas = '*')
@@ -81,7 +93,7 @@ if (!$stmt->rowCount()){
 if ($todos){
     return $stmt->fetchAll();
 }
-return $stmt->fetchObject();
+return $stmt->fetchObject(static::class);
     } catch (\PDOException $ex){
 echo $this->erro = $ex;
 return null;
@@ -101,23 +113,27 @@ protected function cadastrar(array $dados)
         return null;
     }
 }
-protected function atualizar(array $dados, string $termo)
-{
-    try {
-        $set =[];
-        foreach ($dados as $chave => $valor){
-            $set[] = "{$chave} = :{$valor}";
+    protected function atualizar(array $dados, string $termos)
+    {
+        try {
+            $set = [];
+
+            foreach ($dados as $chave => $valor) {
+                $set[] = "{$chave} = :{$chave}";
+            }
+            $set = implode(', ', $set);
+
+            $query = "UPDATE ".$this->tabela." SET {$set} WHERE {$termos}";
+            $stmt = Conexao::getInstancia()->prepare($query);
+            $stmt->execute($this->filtro($dados));
+
+            return ($stmt->rowCount() ?? 1);
+
+        } catch (\PDOException $ex) {
+            echo $this->erro = $ex;
+            return null;
         }
-        $set = implode(', ', $set);
-        $query = "UPDATE ".$this->tabela." SET {$set} WHERE {$termo}";
-        $stmt = Conexao::getInstancia()->prepare($query);
-        $stmt->execute($this->filtro($dados));
-        return ($stmt->rowCount() ?? 1);
-    }catch (\PDOException $ex){
-        echo $this->erro = $ex;
-        return null;
     }
-}
 private function filtro(array $dados)
 {
 $filtro = [];
@@ -131,15 +147,35 @@ protected function armazenar()
 $dados = (array) $this->dados;
 return $dados;
 }
-
-public function salvar()
+public function buscaPorId(int $id)
 {
-    if (empty($this->id)){
-        $this->cadastrar($this->armazenar());
-        if ($this->erro){}
-        $this->mensagem->erro('Erro de sistema ao tentar cadastrar os dados');
-        return false;
-    }
-return true;
+$busca= $this->busca("id ={$id}");
+return $busca->resultado();
 }
+
+    public function salvar()
+    {
+        //CADASTRAR
+        if(empty($this->id)){
+            $id = $this->cadastrar($this->armazenar());
+            if($this->erro){
+                $this->mensagem->erro('Erro de sistema ao tentar cadastrar os dados');
+                return false;
+            }
+        }
+
+        //ATUALIZAR
+        if(!empty($this->id)){
+            $id = $this->id;
+            $this->atualizar($this->armazenar(), "id = {$id}");
+            if($this->erro){
+                $this->mensagem->erro('Erro de sistema ao tentar atualizar os dados');
+                return false;
+            }
+        }
+
+        $this->dados = $this->buscaPorId($id)->dados();
+        return true;
+    }
+
 }
