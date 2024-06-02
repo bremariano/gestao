@@ -5,7 +5,7 @@ namespace sistema\Nucleo;
 use sistema\Nucleo\Conexao;
 use sistema\Nucleo\Mensagem;
 
-class Modelo
+abstract class Modelo
 {
 protected $dados;
 protected $query;
@@ -165,6 +165,14 @@ return $busca->resultado();
             $this->erro = $ex->getMessage();
             return null;
         }
+    }
+    public function deletar()
+    {
+if (empty($this->id)){
+    return false;
+}
+$deletar =$this->apagar("id = {$this->id}");
+return $deletar;
     }
     public function total():int
     {
