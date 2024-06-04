@@ -4,6 +4,7 @@ namespace sistema\Controlador\Admin;
 
 use sistema\Nucleo\Controlador;
 use sistema\Nucleo\Helpers;
+use sistema\Modelo\UsuarioModelo;
 /**
  * Classe AdminLogin
  *
@@ -23,7 +24,10 @@ class AdminLogin extends Controlador
             if (in_array('', $dados)){
                 $this->mensagem->alerta('Todos os campos são obrigatórios!')->flash();
             } else{
-                $this->mensagem->sucesso('Dados válidos!')->flash();
+$usuario = (new UsuarioModelo())->login($dados, 3);
+if ($usuario){
+    Helpers::redirecionar('admin/login');
+}
             }
         }
 echo $this->template->renderizar('login.html', array());
