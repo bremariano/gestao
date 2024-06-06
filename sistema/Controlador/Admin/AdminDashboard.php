@@ -1,6 +1,8 @@
 <?php
 
 namespace sistema\Controlador\Admin;
+use sistema\Modelo\PostModelo;
+use sistema\Modelo\UsuarioModelo;
 use sistema\Nucleo\Sessao;
 use sistema\Nucleo\Helpers;
 
@@ -11,10 +13,33 @@ use sistema\Nucleo\Helpers;
  */
 class AdminDashboard extends AdminControlador
 {
+    /**
+     * Home do admin
+     * @return void
+     */
     public function dashboard():void
     {
-        echo $this->template->renderizar('dashboard.html', []);
+        $posts = new PostModelo();
+        $usuario = new UsuarioModelo();
+
+        echo $this->template->renderizar('dashboard.html',[
+            'posts' => [
+                'total' => $posts->busca()->total(),
+                'ativo' => $posts->busca('status = 1')->total(),
+                'inativo' => $posts->busca('status = 0')->total(),
+            ],
+             'usuarios' => [
+        'total' => $usuario->busca()->total(),
+        'ativo' => $usuario->busca('status = 1')->total(),
+        'inativo' => $usuario->busca('status = 0')->total(),
+    ]
+        ]);
     }
+
+    /**
+     * Faz logout do usuário
+     * @return void
+     */
     public function sair():void
     {
 $sessao = new Sessao();
