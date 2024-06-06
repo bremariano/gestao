@@ -47,4 +47,33 @@ if (!$usuario){
 $this->mensagem->sucesso("{$usuario->nome}, seja bem vindo ao painel de controle")->flash();
 return true;
     }
+
+    public function salvar()
+    {
+        //CADASTRAR
+        if(empty($this->id)){
+            if ($this->buscaPorEmail($this->email)){
+                $this->mensagem->alerta("O e-mail ".$this->dados->email." já esta em uso!");
+                return false;
+            }
+            $id = $this->cadastrar($this->armazenar());
+            if($this->erro){
+                $this->mensagem->erro('Erro de sistema ao tentar cadastrar os dados');
+                return false;
+            }
+        }
+
+        //ATUALIZAR
+        if(!empty($this->id)){
+            $id = $this->id;
+            $this->atualizar($this->armazenar(), "id = {$id}");
+            if($this->erro){
+                $this->mensagem->erro('Erro de sistema ao tentar atualizar os dados');
+                return false;
+            }
+        }
+
+        $this->dados = $this->buscaPorId($id)->dados();
+        return true;
+    }
 }
