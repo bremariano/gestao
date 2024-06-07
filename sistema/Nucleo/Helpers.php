@@ -5,8 +5,19 @@ namespace sistema\Nucleo;
 use Exception;
 use sistema\Nucleo\Sessao;
 
-class Helpers 
+class Helpers
 {
+    public static function validarSenha(string $senha): bool
+    {
+        if (mb_strlen($senha) >= 6 && mb_strlen($senha) <= 50){
+            return true;
+        }
+        return false;
+    }
+    public static function gerarSenha(string $senha):string
+    {
+        return sha1($senha);
+    }
     public static function  flash(): ?string
     {
     $sessao = new  Sessao();
