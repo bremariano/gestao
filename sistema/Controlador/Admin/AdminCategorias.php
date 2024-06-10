@@ -3,6 +3,7 @@
 namespace sistema\Controlador\Admin;
 
 use sistema\Modelo\CategoriaModelo;
+use sistema\Modelo\PostModelo;
 use sistema\Nucleo\Helpers;
 
 /**
@@ -14,26 +15,43 @@ class AdminCategorias extends AdminControlador
 {
     public function listar():void
     {
-        $post = new CategoriaModelo();
+        $categorias = new CategoriaModelo();
         echo $this->template->renderizar('categorias/listar.html', [
-            'categorias' => $post->busca(),
+            'categorias' => $categorias->busca()->ordem('title ASC')->resultado(true),
             'total' => [
-                'total' => $post->total(),
-                'ativo' => $post ->total('status = 1'),
-                'inativo' => $post ->total('status = 0')
+                'categorias' => $categorias->busca()->total(),
+                'categoriasAtiva' => $categorias ->busca(' status = 1 ')->total(),
+                'categoriasInativa' => $categorias ->busca(' status = 0 ')->total()
             ]
         ]);
     }
-    
-     public function cadastrar():void
+
+    public function cadastrar():void
     {
-         $dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
-         if(isset($dados)){
-             (new CategoriaModelo())->armazenar($dados);
-             Helpers::redirecionar('admin/categorias/listar');
-         }
-         
-        echo $this->template->renderizar('categorias/formulario.html', []);
+        $dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
+        if(isset($dados)){
+           if ($this->validarDados($dados)){
+
+               $categoria = new CategoriaModelo();
+
+               $categoria->title = $dados['title'];
+               $categoria->content = $dados['content'];
+               $categoria->status = $dados['status'];
+//               $categoria->cadastrado_em = date('Y-m-d H:i:s');
+
+               if ($categoria->salvar()) {
+                   $this->mensagem->sucesso('Categoria cadastrada com sucesso')->flash();
+                   Helpers::redirecionar('admin/categorias/listar');
+               } else {
+                   $this->mensagem->erro($categoria->erro())->flash();
+                   Helpers::redirecionar('admin/categorias/listar');
+               }
+           }
+        }
+
+        echo $this->template->renderizar('categorias/formulario.html', [
+            'categoria' => $dados
+        ]);
     }
 
     public function editar(int $id):void
@@ -42,16 +60,58 @@ class AdminCategorias extends AdminControlador
 
         $dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
         if(isset($dados)){
-            (new CategoriaModelo())->atualizar($dados, $id);
-            Helpers::redirecionar('admin/categorias/listar');
+           if ($this->validarDados($dados)){
+               $categoria = (new CategoriaModelo())->buscaPorId($categoria->id);
+
+               $categoria->title = $dados['title'];
+               $categoria->content = $dados['content'];
+               $categoria->status = $dados['status'];
+               $categoria->atualizado_em = date('Y-m-d H:i:s');
+
+               if ($categoria->salvar()) {
+                   $this->mensagem->sucesso('Categoria atualizada com sucesso')->flash();
+                   Helpers::redirecionar('admin/categorias/listar');
+               } else {
+                   $this->mensagem->erro($categoria->erro())->flash();
+                   Helpers::redirecionar('admin/categorias/listar');
+               }
+           }
         }
         echo $this->template->renderizar('categorias/formulario.html', [
             'categoria' => $categoria
         ]);
     }
-    public function deletar(int $id):void
+    private function validarDados(array $dados):bool
     {
-        (new CategoriaModelo())->deletar($id);
-        Helpers::redirecionar('admin/categorias/listar');
+        if (empty($dados['title'])) {
+            $this->mensagem->alerta('Escreva um título para a Categoria!')->flash();
+            return false;
+        }
+        return true;
+    }
+    public function deletar(int $id): void
+    {
+        if (is_int($id)) {
+            $categoria = (new CategoriaModelo())->buscaPorId($id);
+            $posts = (new PostModelo())->busca("categoria_id = {$categoria->id}")->resultado(true);
+            if (!$categoria) {
+                $this->mensagem->alerta('A categoria que você está tentando deletar não existe!')->flash();
+                Helpers::redirecionar('admin/categorias/listar');
+            } else {
+                if ($categoria->deletar()) {
+                    $this->mensagem->sucesso('Categoria deletada com sucesso!')->flash();
+                    Helpers::redirecionar('admin/categorias/listar');
+                }
+                elseif ($posts){
+                    $this->mensagem->sucesso("A categoria {$categoria->title} tem posts cadastrados, altere os posts antes de deletar!")->flash();
+                    Helpers::redirecionar('admin/categorias/listar');
+                }
+                else {
+                    $this->mensagem->erro($categoria->erro())->flash();
+                    Helpers::redirecionar('admin/categorias/listar');
+                }
+            }
+        }
+//        $deletar = $this->deletar("id = {$this->id}");
     }
 }

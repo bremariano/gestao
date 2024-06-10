@@ -66,7 +66,7 @@ class SiteControlador extends Controlador
      */
     public function categorias(): array
     {
-        return (new CategoriaModelo())->busca();
+        return (new CategoriaModelo())->busca("status = 1")->resultado(true);
     }
 public function categoria(int $id):void
 {

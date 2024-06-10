@@ -1,70 +1,17 @@
 <?php
 
 namespace sistema\Modelo;
-
-use sistema\Nucleo\Conexao;
+use sistema\Nucleo\Modelo;
 
 /**
  * Classe CategoriaModelo
  *
  * @author Breno Mariano
  */
-class CategoriaModelo
+class CategoriaModelo extends Modelo
 {
-   public function busca(?string $termo = null): array
-    {
-
-//        $query = "SELECT * FROM `categoria`";
-//        if(isset($dados['search'])){
-//
-//            $query .=  " where status = '".$dados['search']."'";
-//            $query .=  " OR title like '%$search%'";
-//
-//        }
-
-       $termo = ($termo ? "WHERE {$termo}" : '');
-       $query = "SELECT * FROM categoria {$termo} ";
-       $stmt = Conexao::getInstancia()->query($query);
-       $resultado = $stmt->fetchAll();
-
-       return $resultado;
-   }
-    
-    public function buscaPorId(int $id): bool|object
-    {
-        $query = "SELECT * FROM `categoria` WHERE id = {$id} ";
-        $stmt = Conexao::getInstancia()->query($query);
-        $resultado = $stmt->fetch();
-
-        return $resultado; 
-    }
-
-    public function armazenar(array $dados):void
-    {
-        $query = "INSERT INTO `categoria` (`title`, `content`, `status`) VALUES (?, ?, ?)";
-        $stmt = Conexao::getInstancia()->prepare($query);
-        $stmt->execute([$dados['title'],$dados['content'],$dados['status']]);
-    }
-
-    public function atualizar(array $dados, int $id):void
-    {
-        $query = "UPDATE `categoria` SET title = ?, content = ?, status = ? WHERE id = {$id} ";
-        $stmt = Conexao::getInstancia()->prepare($query);
-        $stmt->execute([$dados['title'],$dados['content'],$dados['status']]);
-    }
-    public function deletar(int $id):void
-    {
-        $query = "DELETE FROM categoria WHERE `id` = {$id}";
-        $stmt = Conexao::getInstancia()->prepare($query);
-        $stmt->execute();
-    }
-    public function total(?string $termo = null):int
-    {
-        $termo = ($termo ? "WHERE {$termo}" : '');
-        $query = "SELECT * FROM categoria {$termo}";
-        $stmt = Conexao::getInstancia()->prepare($query);
-        $stmt->execute();
-        return $stmt->rowCount();
-    }
-    
+public function __construct()
+{
+    parent::__construct('categoria');
+}
 }

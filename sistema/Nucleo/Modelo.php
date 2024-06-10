@@ -109,7 +109,7 @@ protected function cadastrar(array $dados)
         $stmt->execute($this->filtro($dados));
         return Conexao::getInstancia()->lastInsertId();
     }catch (\PDOException $ex){
-        echo $this->erro = $ex;
+        echo $this->erro = $ex->getMessage();
         return null;
     }
 }
@@ -130,7 +130,7 @@ protected function cadastrar(array $dados)
             return ($stmt->rowCount() ?? 1);
 
         } catch (\PDOException $ex) {
-            echo $this->erro = $ex;
+            echo $this->erro = $ex->getMessage();
             return null;
         }
     }
@@ -180,7 +180,7 @@ return $deletar;
         $stmt->execute();
         return $stmt->rowCount();
     }
-    public function salvar()
+    public function salvar(): bool
     {
         //CADASTRAR
         if(empty($this->id)){

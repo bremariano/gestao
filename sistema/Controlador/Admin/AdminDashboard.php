@@ -37,7 +37,12 @@ class AdminDashboard extends AdminControlador
                 'ativo' => $posts->busca('status = 1')->total(),
                 'inativo' => $posts->busca('status = 0')->total(),
             ],
-            'categorias' => $categorias->busca(),
+            'categorias'=>[
+                'categorias' => $categorias->busca()->ordem('id DESC')->limite(5)->resultado(true),
+                'total' => $categorias->total(),
+                'categoriasAtiva' => $categorias->busca('status = 1')->total(),
+                'categoriasInativa' => $categorias->busca('status = 0')->total()
+            ],
             'usuarios' => [
                 'logins' => $usuarios->busca()->ordem('ultimo_login DESC')->limite(5)->resultado(true),
                 'usuarios' => $usuarios->busca('level != 3')->total(),
