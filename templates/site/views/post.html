@@ -6,10 +6,13 @@
         <div class="col-lg-9 col-md-12">
             <h1>{{post.titulo}}</h1>
 
-            <p>{{post.texto}}</p>
-        </div>
-        <div class="col-lg-3">
+            <div class="my-3">
+                <small class="text-muted">Por {{post.usuario.nome}}, 00/00/0000 às 00:00 em {{post.categoria.title}}</small>
+            </div>
 
+            <div class="texto">
+                <p>{{post.texto}}</p>
+            </div>
         </div>
     </div>
 </div>
