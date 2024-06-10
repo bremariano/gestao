@@ -177,7 +177,8 @@
                                             {{resumirTexto(post.titulo, 100)}}
                                         </div>
                                         <small class="text-muted fw-normal">
-                                            Escrito por {{post.usuario.nome}} há 35 minutos em CATEGORIA
+                                            Escrito por {{post.usuario.nome}} {{ contarTempo (post.cadastrado_em) }}
+                                            {{post.categoria.title}}
                                         </small>
                                     </th>
                                     <td class="text-center">0</td>
