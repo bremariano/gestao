@@ -34,17 +34,21 @@
                 <tr>
                     <th>id</th>
                     <th>Título</th>
+                    <th class="text-center">Categoria</th>
                     <th class="text-center">Visitas</th>
                     <th class="text-center">Status</th>
                     <th class="text-center">Ação</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="align-middle">
                 {% for post in posts %}
                 <tr>
                     <th>{{post.id}}</th>
-                    <td class="fw-bold text-secondary">{{post.titulo}}</td>
-                    <td class="text-center">0</td>
+                    <td class="fw-bold">
+                        {{post.titulo}}
+                    </td>
+                    <td class="text-center"> {{post.categoria.title}}</td>
+                    <td class="text-center">{{post.visitas}}</td>
                     <td class="text-center">
                         {% if post.status == 1 %}
                         <i class="fa-solid fa-circle text-success" tooltip="tooltip" title="Ativo"></i>
@@ -78,10 +82,10 @@
                                 Cadastrado em: {{ post.cadastrado_em|date("d/m/Y H:i:s") }}
                             </li>
                             <li class="list-group-item">
-                                Atualizado em: {{post.atualizado_em}}
+                                Atualizado em: {{post.atualizado_em|date("d/m/Y H:i:s")}}
                             </li>
                             <li class="list-group-item">
-                                Última visita em: {{post.ultima_visita_em}}
+                                Última visita em: {{post.ultima_visita_em|date("d/m/Y H:i:s")}}
                             </li>
                             <li class="list-group-item">
                                 Cadastrado por: <b>{{post.usuario.nome}}</b>

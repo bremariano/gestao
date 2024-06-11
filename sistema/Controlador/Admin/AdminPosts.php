@@ -52,7 +52,7 @@ class AdminPosts extends AdminControlador
         }
 
         echo $this->template->renderizar('posts/formulario.html', [
-            'categorias' => (new CategoriaModelo())->busca(),
+            'categorias' => (new CategoriaModelo())->busca()->resultado(true),
             'post' => $dados
         ]);
     }
