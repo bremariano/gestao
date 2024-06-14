@@ -7,7 +7,7 @@
             <h1>{{post.titulo}}</h1>
 
             <div class="my-3">
-                <small class="text-muted">Por {{post.usuario.nome}}, {{ post.cadastrado_em|date("d/m/y") }} em {{post.categoria.title}}</small>
+                <small class="text-muted">Por {{post.usuario.nome}}, {{ post.cadastrado_em|date("d/m/Y") }} as {{ post.cadastrado_em|date("H:i") }} em {{post.categoria.title}}</small>
             </div>
 
             <div class="texto">

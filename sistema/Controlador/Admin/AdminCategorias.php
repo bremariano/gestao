@@ -97,7 +97,12 @@ class AdminCategorias extends AdminControlador
             if (!$categoria) {
                 $this->mensagem->alerta('A categoria que você está tentando deletar não existe!')->flash();
                 Helpers::redirecionar('admin/categorias/listar');
-            } else {
+            }
+            elseif ($posts){
+                $this->mensagem->alerta("A categoria {$categoria->titulo} tem posts cadastrados delete ou altere  os posts!")->flash();
+                Helpers::redirecionar('admin/categorias/listar');
+            }
+            else {
                 if ($categoria->deletar()) {
                     $this->mensagem->sucesso('Categoria deletada com sucesso!')->flash();
                     Helpers::redirecionar('admin/categorias/listar');

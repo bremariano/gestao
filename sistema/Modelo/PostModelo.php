@@ -21,7 +21,7 @@ class PostModelo extends Modelo
     public function categoria(): ?CategoriaModelo
     {
         if ($this->categoria_id){
-            return (new CategoriaModelo())->buscaPorId($this->id);
+            return (new CategoriaModelo())->buscaPorId($this->categoria_id);
         }
 
 return null;

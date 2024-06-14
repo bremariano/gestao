@@ -40,6 +40,7 @@ class AdminPosts extends AdminControlador
                 $post->categoria_id = $dados['categoria_id'];
                 $post->texto = $dados['texto'];
                 $post->status = $dados['status'];
+                $post->cadastrado_em = date('Y-m-d H:i:s');
 
                 if ($post->salvar()) {
                     $this->mensagem->sucesso('Post cadastrado com sucesso')->flash();
@@ -84,7 +85,7 @@ class AdminPosts extends AdminControlador
 
         echo $this->template->renderizar('posts/formulario.html', [
             'post' => $post,
-            'categorias' => (new CategoriaModelo())->busca()
+            'categorias' => (new CategoriaModelo())->busca()->resultado(true)
         ]);
     }
 
