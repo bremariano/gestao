@@ -35,4 +35,9 @@ return null;
 
         return null;
     }
+    public function salvar():bool
+    {
+        $this->slug();
+        return parent::salvar();
+    }
 }

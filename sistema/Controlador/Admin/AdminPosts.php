@@ -38,7 +38,7 @@ class AdminPosts extends AdminControlador
 
                 $post->titulo = $dados['titulo'];
                 $post->categoria_id = $dados['categoria_id'];
-                $post->slug = Helpers::slug($dados['titulo']). '-'. uniqid();
+                $post->slug = Helpers::slug($dados['titulo']);
                 $post->texto = $dados['texto'];
                 $post->status = $dados['status'];
                 $post->cadastrado_em = date('Y-m-d H:i:s');
@@ -69,10 +69,13 @@ class AdminPosts extends AdminControlador
             if ($this->validarDados($dados)) {
                 $post = (new PostModelo())->buscaPorId($id);
 
-                $post->titulo = $dados['titulo'];
+                $post->usuario_id = $this->usuario->id;
                 $post->categoria_id = $dados['categoria_id'];
+                $post->slug = Helpers::slug($dados['titulo']);
+                $post->titulo = $dados['titulo'];
                 $post->texto = $dados['texto'];
                 $post->status = $dados['status'];
+                $post->atualizado_em = date('Y-m-d H:i:s');
 
                 if ($post->salvar()) {
                     $this->mensagem->sucesso('Post atualizado com sucesso')->flash();

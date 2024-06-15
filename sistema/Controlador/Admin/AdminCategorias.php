@@ -33,7 +33,7 @@ class AdminCategorias extends AdminControlador
            if ($this->validarDados($dados)){
 
                $categoria = new CategoriaModelo();
-
+               $categoria ->slug = Helpers::slug($dados['title']). '-'. uniqid();
                $categoria->title = $dados['title'];
                $categoria->content = $dados['content'];
                $categoria->status = $dados['status'];

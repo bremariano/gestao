@@ -72,12 +72,18 @@ class SiteControlador extends Controlador
     {
         return (new CategoriaModelo())->busca("status = 1")->resultado(true);
     }
-public function categoria(int $id):void
+public function categoria(string $slug):void
 {
-    $post = (new CategoriaModelo())->buscaPorId($id);
+    $categoria = (new CategoriaModelo())->buscaPorSlug($slug);
+    if (!$categoria){
+        Helpers::redirecionar('404');
+    }
+    $categoria->visitas += 1;
+    $categoria->ultima_visita_em  = date ('Y-m-d H:i:s');
+    $categoria->salvar();
 
     echo $this->template->renderizar('categoria.html', [
-        'posts' => $post,
+        'posts' => (new CategoriaModelo())->posts($categoria->id),
         'categorias' => $this->categorias(),
     ]);
 }

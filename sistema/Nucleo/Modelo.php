@@ -182,7 +182,7 @@ return $deletar;
     public function total():int
     {
         $stmt = Conexao::getInstancia()->prepare($this->query);
-        $stmt->execute();
+        $stmt->execute($this->parametros);
         return $stmt->rowCount();
     }
     public function salvar(): bool
@@ -208,6 +208,19 @@ return $deletar;
 
         $this->dados = $this->buscaPorId($id)->dados();
         return true;
+    }
+
+    private function ultimoId(): int
+    {
+        return \sistema\Nucleo\Conexao::getInstancia()->query("SELECT MAX(id) as maximo FROM {$this->tabela}")->fetch()->maximo +1;
+    }
+
+    protected function slug()
+    {
+        $checarSlug = $this->busca("slug = :s AND id != :id", "s={$this->slug}&id={$this->id}");
+        if ($checarSlug->total()){
+            $this->slug = "{$this->slug}-{$this->ultimoId()}";
+        }
     }
 
 }
