@@ -7,7 +7,7 @@
     {% include 'topo.html' %}
     <main>
         {% block conteudo %}
-        <h5 class="mb-3">Dashboard <small class="saudacao text-muted"> - {{saudacao()}}, {{usuario().nome}}.</small></h5>
+        <h5 class="mb-3">Dashboard <small class="saudacao text-muted"> - {{saudacao()}}, {{usuario().nome}}. Seu ultimo login foi em {{usuario().ultimo_login |date ('d/m/Y')}} as {{usuario().ultimo_login |date ('H:i')}}</small></h5>
 
 
         {{ flash() }}
@@ -181,7 +181,7 @@
                                             {{post.categoria.title}}
                                         </small>
                                     </th>
-                                    <td class="text-center">0</td>
+                                    <td class="text-center">{{post.visitas}}</td>
                                     <td class="text-center">
 
                                         <a href="{{ url('admin/posts/editar/'~post.id) }}" tooltip="tooltip" title="Editar">

@@ -53,6 +53,10 @@ class SiteControlador extends Controlador
         if(!$post){
             Helpers::redirecionar('404');
         }
+
+        $post->visitas += 1;
+        $post->ultima_visita_em  = date ('Y-m-d H:i:s');
+        $post->salvar();
         
         echo $this->template->renderizar('post.html', [
             'post' => $post,
