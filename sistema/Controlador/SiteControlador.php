@@ -47,9 +47,9 @@ class SiteControlador extends Controlador
      * @param int $id
      * @return void
      */
-    public function post(int $id):void
+    public function post(string $slug):void
     {
-        $post = (new PostModelo())->buscaPorId($id);
+        $post = (new PostModelo())->buscaPorSlug($slug);
         if(!$post){
             Helpers::redirecionar('404');
         }

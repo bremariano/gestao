@@ -152,6 +152,11 @@ public function buscaPorId(int $id)
 $busca= $this->busca("id ={$id}");
 return $busca->resultado();
 }
+    public function buscaPorSlug(string $slug)
+    {
+        $busca= $this->busca("slug = :s", "s={$slug}");
+        return $busca->resultado();
+    }
     public function apagar(string $termos)
     {
         try {
