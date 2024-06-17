@@ -222,5 +222,11 @@ return $deletar;
             $this->slug = "{$this->slug}-{$this->ultimoId()}";
         }
     }
+    public function salvarVisitas()
+    {
+        $this->visitas += 1;
+        $this->ultima_visita_em  = date ('Y-m-d H:i:s');
+        $this->salvar();
+    }
 
 }
