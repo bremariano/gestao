@@ -7,11 +7,11 @@ require 'vendor/autoload.php';
 use sistema\Biblioteca\Upload;
 
 $upload = new Upload('Upload');
-$upload->arquivo('imagens');
-r($upload);
-var_dump($upload);
+
 if(!empty($arquivo = $_FILES)){
-    
+    $arquivo = $_FILES['arquivo'];
+    $upload->arquivo('imagens');
+    r($upload);
 }
 ?>
 <form method="post" enctype="multipart/form-data">

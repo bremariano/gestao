@@ -22,8 +22,10 @@ class Upload {
         }
     }
 
-    public function arquivo(string $pasta = null)
+    public function arquivo(array $arquivo, string $pasta = null)
     {
+        $this->arquivo = $arquivo;
+
         $this->pasta = $pasta ?? 'arquivos';
 
         $this->criarPasta();
@@ -31,7 +33,7 @@ class Upload {
 
     public function criarPasta(): void
     {
-        if(!file_exists($this->diretorio).DIRECTORY_SEPARATOR.$this->pasta && !is_dir($this->diretorio).DIRECTORY_SEPARATOR.$this->pasta){
+        if(!file_exists($this->diretorio.DIRECTORY_SEPARATOR.$this->pasta) && !is_dir($this->diretorio.DIRECTORY_SEPARATOR.$this->pasta)){
             mkdir($this->diretorio.DIRECTORY_SEPARATOR.$this->pasta, 0755);
         }
     }
