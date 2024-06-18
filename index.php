@@ -10,7 +10,7 @@ $upload = new Upload('upload');
 
 if (!empty($arquivo = $_FILES)) {
     $arquivo = $_FILES['arquivo'];
-    $upload->arquivo($arquivo, 'imagens');
+    $upload->arquivo($arquivo, null, 'imagens');
     r($upload);
 }
 
