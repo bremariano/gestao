@@ -4,13 +4,15 @@
 require 'vendor/autoload.php';
 
 //require 'rotas.php';
+use sistema\Biblioteca\Upload;
 
-
-$arquivo = $_FILES;
-
-r($arquivo);
-echo $arquivo['arquivo'] ['name'];
-echo '<hr>'; 
+$upload = new Upload('Upload');
+$upload->arquivo('imagens');
+r($upload);
+var_dump($upload);
+if(!empty($arquivo = $_FILES)){
+    
+}
 ?>
 <form method="post" enctype="multipart/form-data">
 <input type="file" name="arquivo">
