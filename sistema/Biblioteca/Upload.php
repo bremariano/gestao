@@ -11,7 +11,8 @@ class Upload {
     public $diretorio;
     public $arquivo;
     public $nome;
-    public $pasta;
+    public $subDiretorio;
+
 
     public function __construct(string $diretorio = null)
     {
@@ -22,19 +23,29 @@ class Upload {
         }
     }
 
-    public function arquivo(array $arquivo, string $pasta = null)
+    public function arquivo(array $arquivo, string $subDiretorio = null)
     {
         $this->arquivo = $arquivo;
 
-        $this->pasta = $pasta ?? 'arquivos';
+        $this->subDiretorio = $subDiretorio ?? 'arquivos';
 
-        $this->criarPasta();
+        $this->criarSubDiretorio();
+        $this->moverArquivo();
     }
 
-    public function criarPasta(): void
+    public function criarSubDiretorio(): void
     {
-        if(!file_exists($this->diretorio.DIRECTORY_SEPARATOR.$this->pasta) && !is_dir($this->diretorio.DIRECTORY_SEPARATOR.$this->pasta)){
-            mkdir($this->diretorio.DIRECTORY_SEPARATOR.$this->pasta, 0755);
+        if(!file_exists($this->diretorio.DIRECTORY_SEPARATOR.$this->subDiretorio) && !is_dir($this->diretorio.DIRECTORY_SEPARATOR.$this->subDiretorio)){
+            mkdir($this->diretorio.DIRECTORY_SEPARATOR.$this->subDiretorio, 0755);
+        }
+    }
+
+    public function moverArquivo(): void
+    {
+        if(move_uploaded_file($this->arquivo['tmp_name'], $this->diretorio.DIRECTORY_SEPARATOR.$this->subDiretorio.DIRECTORY_SEPARATOR.$this->arquivo['name'])){
+            echo $this->arquivo['name'].' foi movido com sucesso';
+        }else {
+            echo 'Erro ao enviar arquivo';
         }
     }
 
