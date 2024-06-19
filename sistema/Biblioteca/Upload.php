@@ -12,6 +12,7 @@ class Upload {
     public $arquivo;
     public $nome;
     public $subDiretorio;
+    public $tamanho;
     public $resultado;
     public $erro;
 
@@ -35,7 +36,7 @@ class Upload {
         }
     }
 
-    public function arquivo(array $arquivo, string $nome = null, string $subDiretorio = null)
+    public function arquivo(array $arquivo, string $nome = null, string $subDiretorio = null, int $tamanho = null)
     {
         $this->arquivo = $arquivo;
 
@@ -43,9 +44,36 @@ class Upload {
 
         $this->subDiretorio = $subDiretorio ?? 'arquivos';
 
-        $this->criarSubDiretorio();
-        $this->renomearArquivo();
-        $this->moverArquivo();
+        $extensao = pathinfo($this->arquivo['name'], PATHINFO_EXTENSION);
+        $this->tamanho = $tamanho ?? 1;
+
+        $extensoesValidas = [
+            'pdf',
+            'png',
+            'docx'
+            ];
+
+        $tiposValidos = [
+            'application/pdf',
+            'text/plain',
+            'image/png',
+            'image/jpeg'
+        ];
+
+        if (!in_array($extensao, $extensoesValidas)){
+            $this->erro = 'extensão não permitida. vc só pode enviar .' .implode('.', $extensoesValidas);
+        }elseif (!in_array($this->arquivo['type'], $tiposValidos)){
+            $this->erro = 'Tipo de arquivo não permitido';
+        }
+        elseif ($this->arquivo['size'] > $this->tamanho * (1024*1024) ){
+            $this->erro = "arquivo muito grande, permitido {$this->tamanho}MB seu arquivo tem {$this->arquivo['size']}";
+        }
+        else{
+            $this->criarSubDiretorio();
+            $this->renomearArquivo();
+            $this->moverArquivo();
+        }
+
     }
 
     public function criarSubDiretorio(): void
