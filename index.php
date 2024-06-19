@@ -11,6 +11,11 @@ $upload = new Upload('upload');
 if (!empty($arquivo = $_FILES)) {
     $arquivo = $_FILES['arquivo'];
     $upload->arquivo($arquivo, null, 'imagens');
+    if ($upload->getResultado()){
+        echo 'upload feito com sucesso!'.$upload->getResultado();
+    }else{
+        echo $upload->getErro();
+    }
     r($upload);
 }
 
