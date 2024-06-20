@@ -5,6 +5,7 @@ namespace sistema\Controlador\Admin;
 use sistema\Modelo\PostModelo;
 use sistema\Modelo\CategoriaModelo;
 use sistema\Nucleo\Helpers;
+use sistema\Biblioteca\Upload;
 
 /**
  * Classe AdminPosts
@@ -13,7 +14,12 @@ use sistema\Nucleo\Helpers;
  */
 class AdminPosts extends AdminControlador
 {
+    private string $capa;
 
+    /**
+     * Lista posts
+     * @return void
+     */
     public function listar(): void
     {
         $post = new PostModelo();
@@ -28,6 +34,10 @@ class AdminPosts extends AdminControlador
         ]);
     }
 
+    /**
+     * Cadastra posts
+     * @return void
+     */
     public function cadastrar(): void
     {
         $dados = filter_input_array(INPUT_POST, FILTER_DEFAULT);
@@ -36,12 +46,13 @@ class AdminPosts extends AdminControlador
             if ($this->validarDados($dados)) {
                 $post = new PostModelo();
 
-                $post->titulo = $dados['titulo'];
+                $post->usuario_id = $this->usuario->id;
                 $post->categoria_id = $dados['categoria_id'];
                 $post->slug = Helpers::slug($dados['titulo']);
+                $post->titulo = $dados['titulo'];
                 $post->texto = $dados['texto'];
                 $post->status = $dados['status'];
-                $post->cadastrado_em = date('Y-m-d H:i:s');
+                $post->capa = $this->capa;
 
                 if ($post->salvar()) {
                     $this->mensagem->sucesso('Post cadastrado com sucesso')->flash();
@@ -59,6 +70,11 @@ class AdminPosts extends AdminControlador
         ]);
     }
 
+    /**
+     * Edita post pelo ID
+     * @param int $id
+     * @return void
+     */
     public function editar(int $id): void
     {
         $post = (new PostModelo())->buscaPorId($id);
@@ -77,6 +93,13 @@ class AdminPosts extends AdminControlador
                 $post->status = $dados['status'];
                 $post->atualizado_em = date('Y-m-d H:i:s');
 
+                if(!empty($_FILES['capa'])){
+                    if($post->capa && file_exists("uploads/imagens/{$post->capa}")){
+                        unlink("uploads/imagens/{$post->capa}");
+                    }
+                    $post->capa = $this->capa;
+                }
+
                 if ($post->salvar()) {
                     $this->mensagem->sucesso('Post atualizado com sucesso')->flash();
                     Helpers::redirecionar('admin/posts/listar');
@@ -94,12 +117,23 @@ class AdminPosts extends AdminControlador
     }
 
     /**
-     * Checa os dados do formulário
+     * Valida os dados do formulário
      * @param array $dados
      * @return bool
      */
     public function validarDados(array $dados): bool
     {
+        if(!empty($_FILES['capa'])){
+            $upload = new Upload();
+            $upload->arquivo($_FILES['capa'], Helpers::slug($dados['titulo']), 'imagens');
+            if($upload->getResultado()){
+                $this->capa = $upload->getResultado();
+            }else {
+                $this->mensagem->alerta($upload->getErro())->flash();
+                return false;
+            }
+        }
+
         if (empty($dados['titulo'])) {
             $this->mensagem->alerta('Escreva um título para o Post!')->flash();
             return false;
@@ -112,9 +146,13 @@ class AdminPosts extends AdminControlador
         return true;
     }
 
+    /**
+     * Deleta posts por ID
+     * @param int $id
+     * @return void
+     */
     public function deletar(int $id): void
     {
-//        $id = filter_var($id, FILTER_VALIDATE_INT);
         if (is_int($id)) {
             $post = (new PostModelo())->buscaPorId($id);
             if (!$post) {
@@ -122,6 +160,11 @@ class AdminPosts extends AdminControlador
                 Helpers::redirecionar('admin/posts/listar');
             } else {
                 if ($post->deletar()) {
+
+                    if($post->capa && file_exists("uploads/imagens/{$post->capa}")){
+                        unlink("uploads/imagens/{$post->capa}");
+                    }
+
                     $this->mensagem->sucesso('Post deletado com sucesso!')->flash();
                     Helpers::redirecionar('admin/posts/listar');
                 } else {
