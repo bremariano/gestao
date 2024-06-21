@@ -33,9 +33,9 @@ class AdminDashboard extends AdminControlador
         echo $this->template->renderizar('dashboard.html', [
             'posts' => [
                 'posts' => $posts->busca()->ordem('id DESC')->limite(5)->resultado(true),
-                'total' => $posts->busca()->total(),
-                'ativo' => $posts->busca('status = 1')->total(),
-                'inativo' => $posts->busca('status = 0')->total(),
+                'total' => $posts->busca(null, 'COUNT(id)', 'id')->total(),
+                'ativo' => $posts->busca('status = :s', 's=1 COUNT(status)', 'status')->total(),
+                'inativo' => $posts->busca('status = :s', 's=0 COUNT(status)', 'status')->total(),
             ],
             'categorias'=>[
                 'categorias' => $categorias->busca()->ordem('id DESC')->limite(5)->resultado(true),
