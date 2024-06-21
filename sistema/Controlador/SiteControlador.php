@@ -24,7 +24,8 @@ class SiteControlador extends Controlador
         $posts = (new PostModelo())->busca("status = 1");
         
         echo $this->template->renderizar('index.html', [
-            'posts' => $posts->resultado(true),
+            'slides' => $posts->ordem('id DESC')->limite(3)->resultado(true),
+            'posts' => $posts->ordem('id DESC')->limite(10)->offset(3)->resultado(true),
             'categorias' => $this->categorias(),
         ]);
     }
