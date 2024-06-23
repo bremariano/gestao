@@ -6,6 +6,7 @@ use sistema\Nucleo\Controlador;
 use sistema\Nucleo\Helpers;
 use sistema\Nucleo\Sessao;
 use sistema\Modelo\UsuarioModelo;
+
 class UsuarioControlador extends Controlador
 {
 
@@ -13,13 +14,14 @@ class UsuarioControlador extends Controlador
     {
         parent::__construct('templates/site/views');
     }
-public static function usuario(): ?UsuarioModelo
-{
-$sessao = new Sessao();
-if (!$sessao->checar('usuarioId')){
-    return null;
-}
-return (new UsuarioModelo())->buscaPorId($sessao->usuarioId);
-}
+
+    public static function usuario(): ?UsuarioModelo
+    {
+        $sessao = new Sessao();
+        if (!$sessao->checar('usuarioId')) {
+            return null;
+        }
+        return (new UsuarioModelo())->buscaPorId($sessao->usuarioId);
+    }
 
 }

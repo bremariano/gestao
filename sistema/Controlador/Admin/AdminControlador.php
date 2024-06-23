@@ -6,6 +6,7 @@ use sistema\Nucleo\Controlador;
 use sistema\Nucleo\Helpers;
 use sistema\Controlador\UsuarioControlador;
 use sistema\Nucleo\Sessao;
+
 /**
  * Classe AdminControlador
  *
@@ -13,19 +14,20 @@ use sistema\Nucleo\Sessao;
  */
 class AdminControlador extends Controlador
 {
-    protected  $usuario;
+    protected $usuario;
+
     public function __construct()
     {
         parent::__construct('templates/admin/views');
 
         $this->usuario = UsuarioControlador::usuario();
 
-        if (!$this->usuario OR $this->usuario->level != 3){
+        if (!$this->usuario or $this->usuario->level != 3) {
             $this->mensagem->erro('Faça login para acessar o painel de controle!')->flash();
             $sessao = new Sessao();
             $sessao->limpar('usuarioId');
             Helpers::redirecionar('admin/login');
         }
     }
-    
+
 }

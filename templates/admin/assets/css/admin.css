@@ -38,13 +38,16 @@ body {
     padding: 1rem;
     margin-bottom: 5px;
 }
+
 .sidebarLogo a {
     color: #fff !important;
 }
+
 .logo {
     max-width: 100px;
     margin: auto !important
 }
+
 .sidebarTitulo {
     color: var(--cor12);
     font-size: .75rem;
@@ -109,36 +112,37 @@ header h2 i {
     display: none;
 }
 
-#menu:checked+.sidebar {
+#menu:checked + .sidebar {
     width: 70px;
 }
 
-#menu:checked+.sidebar .sidebarLogo a span:last-child,
-#menu:checked+.sidebar li a span:last-child {
+#menu:checked + .sidebar .sidebarLogo a span:last-child,
+#menu:checked + .sidebar li a span:last-child {
     display: none;
 }
 
-#menu:checked~.conteudo {
+#menu:checked ~ .conteudo {
     margin-left: 70px;
 }
 
-#menu:checked+.sidebar .copyright {
+#menu:checked + .sidebar .copyright {
     display: none
 }
 
-#menu:checked+.sidebar .sidebarLogo{
-    display: none
-}
-#menu:checked+.sidebar .sidebarTitulo{
+#menu:checked + .sidebar .sidebarLogo {
     display: none
 }
 
-#menu:checked~.conteudo header {
+#menu:checked + .sidebar .sidebarTitulo {
+    display: none
+}
+
+#menu:checked ~ .conteudo header {
     width: calc(100% - 70px);
     left: 70px;
 }
 
-#menu:checked+.sidebar .sidebarMenu i {
+#menu:checked + .sidebar .sidebarMenu i {
     font-size: 1.3em;
     padding-left: .8rem;
 }
@@ -184,21 +188,26 @@ main {
     .sidebar {
         width: 70px;
     }
+
     .sidebar .sidebarLogo span:last-child,
     .sidebar li a span:last-child {
         display: none;
     }
+
     .sidebarMenu i {
         font-size: 1.3em;
         padding-left: .8rem;
     }
+
     .conteudo {
         margin-left: 70px;
     }
+
     .conteudo header {
         width: calc(100% - 70px);
         left: 70px;
     }
+
     .sidebar:hover {
         width: 300px;
         z-index: 200;
@@ -213,7 +222,7 @@ main {
         font-size: 1em;
     }
 
-    .sidebarLogo,.sidebarTitulo {
+    .sidebarLogo, .sidebarTitulo {
         display: none
     }
 
@@ -238,24 +247,26 @@ main {
         left: 0 !important;
     }
 
-    #menu:checked+.sidebar {
+    #menu:checked + .sidebar {
         left: 0 !important;
         z-index: 100;
         width: 300px;
     }
 
-    #menu:checked~.conteudo {
+    #menu:checked ~ .conteudo {
         margin-left: 0 !important;
     }
 
-    #menu:checked+.sidebar .sidebarLogo h2 span:last-child,
-    #menu:checked+.sidebar li a span:last-child {
+    #menu:checked + .sidebar .sidebarLogo h2 span:last-child,
+    #menu:checked + .sidebar li a span:last-child {
         display: inline;
     }
-    #menu:checked+.sidebar .sidebarLogo{
+
+    #menu:checked + .sidebar .sidebarLogo {
         display: block
     }
-    #menu:checked+.sidebar .sidebarTitulo{
+
+    #menu:checked + .sidebar .sidebarTitulo {
         display: block
     }
 

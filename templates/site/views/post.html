@@ -7,7 +7,8 @@
             <h1>{{post.titulo}}</h1>
 
             <div class="my-3">
-                <small class="text-muted">Por {{post.usuario.nome}}, {{ post.cadastrado_em|date("d/m/Y") }} às {{ post.cadastrado_em|date("H:i") }} em {{post.categoria.titulo}}</small>
+                <small class="text-muted">Por {{post.usuario.nome}}, {{ post.cadastrado_em|date("d/m/Y") }} às {{
+                    post.cadastrado_em|date("H:i") }} em {{post.categoria.titulo}}</small>
             </div>
 
             <a
@@ -15,9 +16,9 @@
                     data-fancybox="gallery"
                     data-caption="{{post.titulo}}"
             >
-                <img src="{{url('uploads/imagens/thumbs/'~post.capa)}}" alt="{{post.titulo}}" title="{{post.titulo}}" class="capaPequena"/>
+                <img src="{{url('uploads/imagens/thumbs/'~post.capa)}}" alt="{{post.titulo}}" title="{{post.titulo}}"
+                     class="capaPequena"/>
             </a>
-
 
 
             <div class="texto">

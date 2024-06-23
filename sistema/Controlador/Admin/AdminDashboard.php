@@ -1,6 +1,7 @@
 <?php
 
 namespace sistema\Controlador\Admin;
+
 use sistema\Modelo\PostModelo;
 use sistema\Modelo\UsuarioModelo;
 use sistema\Nucleo\Sessao;
@@ -13,10 +14,10 @@ use sistema\Modelo\CategoriaModelo;
  * @author Breno Mariano
  */
 
-    /**
-     * Home do admin
-     * @return void
-     */
+/**
+ * Home do admin
+ * @return void
+ */
 class AdminDashboard extends AdminControlador
 {
 
@@ -37,7 +38,7 @@ class AdminDashboard extends AdminControlador
                 'ativo' => $posts->busca('status = :s', 's=1 COUNT(status)', 'status')->total(),
                 'inativo' => $posts->busca('status = :s', 's=0 COUNT(status)', 'status')->total(),
             ],
-            'categorias'=>[
+            'categorias' => [
                 'categorias' => $categorias->busca()->ordem('id DESC')->limite(5)->resultado(true),
                 'total' => $categorias->total(),
                 'categoriasAtiva' => $categorias->busca('status = 1')->total(),

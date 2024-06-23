@@ -16,6 +16,14 @@
 
 {{ flash() }}
 
+<form method="post" action="/blog/admin/posts/listar">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="pesquisar" placeholder="Pesquise pelo titulo!"
+               aria-label="Recipient's username" aria-describedby="button-addon2">
+        <button class="btn btn-success" type="submit" id="button-addon2">Pesquisar</button>
+    </div>
+</form>
+
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
         <div>

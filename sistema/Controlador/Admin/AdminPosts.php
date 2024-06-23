@@ -23,10 +23,16 @@ class AdminPosts extends AdminControlador
      */
     public function listar(): void
     {
+        $pesquisar = null;
+        if (isset($_POST['pesquisar'])) {
+            $pesquisar = "titulo like '%" . $_POST['pesquisar'] . "%'";
+        }
+
+
         $post = new PostModelo();
 
         echo $this->template->renderizar('posts/listar.html', [
-            'posts' => $post->busca()->ordem('status ASC, id DESC')->resultado(true),
+            'posts' => $post->busca($pesquisar)->ordem('status ASC, id DESC')->resultado(true),
             'total' => [
                 'posts' => $post->total(),
                 'postsAtivo' => $post->busca('status = 1')->total(),

@@ -12,7 +12,7 @@ class Mensagem
 
     private $texto;
     private $css;
-    
+
     public function __toString()
     {
         return $this->renderizar();
@@ -84,8 +84,9 @@ class Mensagem
     {
         return filter_var($mensagem, FILTER_SANITIZE_SPECIAL_CHARS);
     }
-public function flash(): void
-{
-    (new Sessao()) ->criar('flash', $this);
-}
+
+    public function flash(): void
+    {
+        (new Sessao())->criar('flash', $this);
+    }
 }

@@ -22,49 +22,49 @@ class SiteControlador extends Controlador
     public function index(): void
     {
         $posts = (new PostModelo())->busca("status = 1");
-        
+
         echo $this->template->renderizar('index.html', [
             'slides' => $posts->ordem('id DESC')->limite(3)->resultado(true),
             'posts' => $posts->ordem('id DESC')->limite(10)->offset(3)->resultado(true),
             'categorias' => $this->categorias(),
         ]);
     }
-    
-    public function buscar():void
+
+    public function buscar(): void
     {
-        $busca = filter_input(INPUT_POST,'busca', FILTER_DEFAULT);
-        if(isset($busca)){
+        $busca = filter_input(INPUT_POST, 'busca', FILTER_DEFAULT);
+        if (isset($busca)) {
             $posts = (new PostModelo())->busca("status = 1 AND titulo LIKE '%{$busca}%'")->resultado(true);
-            
-           if($posts){
-            foreach ($posts as $post){
-                echo "<li class='list-group-item fw-bold'><a href=".Helpers::url('post/').$post->id.">$post->titulo</a></li>";
+
+            if ($posts) {
+                foreach ($posts as $post) {
+                    echo "<li class='list-group-item fw-bold'><a href=" . Helpers::url('post/') . $post->id . ">$post->titulo</a></li>";
+                }
             }
-           }
         }
-        
+
     }
-    
+
     /**
      * Busca post por ID
      * @param string $slug
      * @return void
      */
-    public function post(string $slug):void
+    public function post(string $slug): void
     {
         $post = (new PostModelo())->buscaPorSlug($slug);
-        if(!$post){
+        if (!$post) {
             Helpers::redirecionar('404');
         }
 
         $post->salvarVisitas();
-        
+
         echo $this->template->renderizar('post.html', [
             'post' => $post,
             'categorias' => $this->categorias(),
         ]);
     }
-    
+
     /**
      * Categorias
      * @return array
@@ -73,21 +73,22 @@ class SiteControlador extends Controlador
     {
         return (new CategoriaModelo())->busca("status = 1")->resultado(true);
     }
-public function categoria(string $slug):void
-{
-    $categoria = (new CategoriaModelo())->buscaPorSlug($slug);
-    if (!$categoria){
-        Helpers::redirecionar('404');
+
+    public function categoria(string $slug): void
+    {
+        $categoria = (new CategoriaModelo())->buscaPorSlug($slug);
+        if (!$categoria) {
+            Helpers::redirecionar('404');
+        }
+        $categoria->salvarVisitas();
+
+        echo $this->template->renderizar('categoria.html', [
+            'posts' => (new CategoriaModelo())->posts($categoria->id),
+            'categorias' => $this->categorias(),
+        ]);
     }
-    $categoria->salvarVisitas();
 
-    echo $this->template->renderizar('categoria.html', [
-        'posts' => (new CategoriaModelo())->posts($categoria->id),
-        'categorias' => $this->categorias(),
-    ]);
-}
 
-    
     /**
      * Sobre
      * @return void
@@ -98,7 +99,7 @@ public function categoria(string $slug):void
             'titulo' => 'Sobre nós'
         ]);
     }
-    
+
     /**
      * ERRO 404
      * @return void

@@ -7,27 +7,27 @@ use sistema\Nucleo\Mensagem;
 
 abstract class Modelo
 {
-protected $dados;
-protected $query;
-protected $erro;
-protected $parametros;
-protected string $tabela;
-protected $ordem;
-protected $limite;
-protected $offset;
-protected $mensagem;
+    protected $dados;
+    protected $query;
+    protected $erro;
+    protected $parametros;
+    protected string $tabela;
+    protected $ordem;
+    protected $limite;
+    protected $offset;
+    protected $mensagem;
 
-public function __construct(string $tabela)
-{
-    $this->tabela = $tabela;
-    $this->mensagem = new Mensagem();
-}
+    public function __construct(string $tabela)
+    {
+        $this->tabela = $tabela;
+        $this->mensagem = new Mensagem();
+    }
 
-public function ordem(string $ordem)
-{
-$this->ordem = " ORDER BY {$ordem}";
-return $this;
-}
+    public function ordem(string $ordem)
+    {
+        $this->ordem = " ORDER BY {$ordem}";
+        return $this;
+    }
 
     public function limite(string $limite)
     {
@@ -43,76 +43,82 @@ return $this;
 
     public function erro()
     {
-return $this->erro;
+        return $this->erro;
     }
 
     public function mensagem()
     {
-return $this->mensagem;
+        return $this->mensagem;
     }
+
     public function dados()
     {
-return $this->dados;
+        return $this->dados;
     }
+
     public function __set($nome, $valor)
     {
-        if (empty($this->dados)){
+        if (empty($this->dados)) {
             $this->dados = new \stdClass();
         }
         $this->dados->$nome = $valor;
     }
+
     public function __isset($nome)
     {
         return isset($this->dados->$nome);
     }
+
     public function __get($nome)
     {
         return $this->dados->$nome ?? null;
     }
 
     public function busca(?string $termos = null, ?string $parametros = null, string $colunas = '*')
-{
-if ($termos){
-    $this->query = "SELECT {$colunas} FROM ".$this->tabela." WHERE {$termos} ";
-    parse_str($parametros, $this->parametros);
-    return $this;
-}
-$this->query = "SELECT {$colunas} FROM ".$this->tabela;
-return $this;
-}
-
-public function resultado(bool $todos = false)
-{
-    try {
-$stmt = Conexao::getInstancia()->prepare($this->query.$this->ordem.$this->limite.$this->offset);
-$stmt->execute($this->parametros);
-
-if (!$stmt->rowCount()){
-    return null;
-}
-if ($todos){
-    return $stmt->fetchAll(\PDO::FETCH_CLASS, static::class);
-}
-return $stmt->fetchObject(static::class);
-    } catch (\PDOException $ex){
-echo $this->erro = $ex;
-return null;
+    {
+        if ($termos) {
+            $this->query = "SELECT {$colunas} FROM " . $this->tabela . " WHERE {$termos} ";
+            parse_str($parametros, $this->parametros);
+            return $this;
+        }
+        $this->query = "SELECT {$colunas} FROM " . $this->tabela;
+        return $this;
     }
-}
-protected function cadastrar(array $dados)
-{
-    try {
-        $colunas = implode(',', array_keys($dados));
-        $valores = ':'.implode(',:', array_keys($dados));
-        $query = "INSERT INTO ".$this->tabela." ({$colunas}) VALUES ({$valores})";
-        $stmt = Conexao::getInstancia()->prepare($query);
-        $stmt->execute($this->filtro($dados));
-        return Conexao::getInstancia()->lastInsertId();
-    }catch (\PDOException $ex){
-        echo $this->erro = $ex->getMessage();
-        return null;
+
+    public function resultado(bool $todos = false)
+    {
+        try {
+            $stmt = Conexao::getInstancia()->prepare($this->query . $this->ordem . $this->limite . $this->offset);
+            $stmt->execute($this->parametros);
+
+            if (!$stmt->rowCount()) {
+                return null;
+            }
+            if ($todos) {
+                return $stmt->fetchAll(\PDO::FETCH_CLASS, static::class);
+            }
+            return $stmt->fetchObject(static::class);
+        } catch (\PDOException $ex) {
+            echo $this->erro = $ex;
+            return null;
+        }
     }
-}
+
+    protected function cadastrar(array $dados)
+    {
+        try {
+            $colunas = implode(',', array_keys($dados));
+            $valores = ':' . implode(',:', array_keys($dados));
+            $query = "INSERT INTO " . $this->tabela . " ({$colunas}) VALUES ({$valores})";
+            $stmt = Conexao::getInstancia()->prepare($query);
+            $stmt->execute($this->filtro($dados));
+            return Conexao::getInstancia()->lastInsertId();
+        } catch (\PDOException $ex) {
+            echo $this->erro = $ex->getMessage();
+            return null;
+        }
+    }
+
     protected function atualizar(array $dados, string $termos)
     {
         try {
@@ -123,7 +129,7 @@ protected function cadastrar(array $dados)
             }
             $set = implode(', ', $set);
 
-            $query = "UPDATE ".$this->tabela." SET {$set} WHERE {$termos}";
+            $query = "UPDATE " . $this->tabela . " SET {$set} WHERE {$termos}";
             $stmt = Conexao::getInstancia()->prepare($query);
             $stmt->execute($this->filtro($dados));
 
@@ -134,33 +140,38 @@ protected function cadastrar(array $dados)
             return null;
         }
     }
-private function filtro(array $dados)
-{
-$filtro = [];
-foreach ($dados as $chave => $valor){
-    $filtro[$chave] = (is_null($valor) ? null : filter_var($valor, FILTER_DEFAULT));
-}
-return $filtro;
-}
-protected function armazenar()
-{
-$dados = (array) $this->dados;
-return $dados;
-}
-public function buscaPorId(int $id)
-{
-$busca= $this->busca("id ={$id}");
-return $busca->resultado();
-}
-    public function buscaPorSlug(string $slug)
+
+    private function filtro(array $dados)
     {
-        $busca= $this->busca("slug = :s", "s={$slug}");
+        $filtro = [];
+        foreach ($dados as $chave => $valor) {
+            $filtro[$chave] = (is_null($valor) ? null : filter_var($valor, FILTER_DEFAULT));
+        }
+        return $filtro;
+    }
+
+    protected function armazenar()
+    {
+        $dados = (array)$this->dados;
+        return $dados;
+    }
+
+    public function buscaPorId(int $id)
+    {
+        $busca = $this->busca("id ={$id}");
         return $busca->resultado();
     }
+
+    public function buscaPorSlug(string $slug)
+    {
+        $busca = $this->busca("slug = :s", "s={$slug}");
+        return $busca->resultado();
+    }
+
     public function apagar(string $termos)
     {
         try {
-            $query = "DELETE FROM ".$this->tabela." WHERE {$termos}";
+            $query = "DELETE FROM " . $this->tabela . " WHERE {$termos}";
             $stmt = Conexao::getInstancia()->prepare($query);
             $stmt->execute();
 
@@ -171,36 +182,39 @@ return $busca->resultado();
             return null;
         }
     }
+
     public function deletar()
     {
-if (empty($this->id)){
-    return false;
-}
-$deletar =$this->apagar("id = {$this->id}");
-return $deletar;
+        if (empty($this->id)) {
+            return false;
+        }
+        $deletar = $this->apagar("id = {$this->id}");
+        return $deletar;
     }
-    public function total():int
+
+    public function total(): int
     {
         $stmt = Conexao::getInstancia()->prepare($this->query);
         $stmt->execute($this->parametros);
         return $stmt->rowCount();
     }
+
     public function salvar(): bool
     {
         //CADASTRAR
-        if(empty($this->id)){
+        if (empty($this->id)) {
             $id = $this->cadastrar($this->armazenar());
-            if($this->erro){
+            if ($this->erro) {
                 $this->mensagem->erro('Erro de sistema ao tentar cadastrar os dados');
                 return false;
             }
         }
 
         //ATUALIZAR
-        if(!empty($this->id)){
+        if (!empty($this->id)) {
             $id = $this->id;
             $this->atualizar($this->armazenar(), "id = {$id}");
-            if($this->erro){
+            if ($this->erro) {
                 $this->mensagem->erro('Erro de sistema ao tentar atualizar os dados');
                 return false;
             }
@@ -212,20 +226,21 @@ return $deletar;
 
     private function ultimoId(): int
     {
-        return \sistema\Nucleo\Conexao::getInstancia()->query("SELECT MAX(id) as maximo FROM {$this->tabela}")->fetch()->maximo +1;
+        return \sistema\Nucleo\Conexao::getInstancia()->query("SELECT MAX(id) as maximo FROM {$this->tabela}")->fetch()->maximo + 1;
     }
 
     protected function slug()
     {
         $checarSlug = $this->busca("slug = :s AND id != :id", "s={$this->slug}&id={$this->id}");
-        if ($checarSlug->total()){
+        if ($checarSlug->total()) {
             $this->slug = "{$this->slug}-{$this->ultimoId()}";
         }
     }
+
     public function salvarVisitas()
     {
         $this->visitas += 1;
-        $this->ultima_visita_em  = date ('Y-m-d H:i:s');
+        $this->ultima_visita_em = date('Y-m-d H:i:s');
         $this->salvar();
     }
 

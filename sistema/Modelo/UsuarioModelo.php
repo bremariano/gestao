@@ -1,9 +1,11 @@
 <?php
+
 namespace sistema\Modelo;
 
 use sistema\Nucleo\Modelo;
 use sistema\Nucleo\Sessao;
 use sistema\Nucleo\Helpers;
+
 class UsuarioModelo extends Modelo
 {
     public function __construct()
@@ -18,7 +20,7 @@ class UsuarioModelo extends Modelo
      */
     public function buscaPorEmail(string $email): ?UsuarioModelo
     {
-        $busca = $this->busca("email = :e","e={$email}");
+        $busca = $this->busca("email = :e", "e={$email}");
         return $busca->resultado();
     }
 
@@ -32,22 +34,22 @@ class UsuarioModelo extends Modelo
     {
         $usuario = (new UsuarioModelo())->buscaPorEmail($dados['email']);
 
-        if(!$usuario){
+        if (!$usuario) {
             $this->mensagem->erro("Os dados informados para o login estão incorretos!")->flash();
             return false;
         }
 
-        if(!Helpers::verificarSenha($dados ['senha'], $usuario->senha)){
+        if (!Helpers::verificarSenha($dados ['senha'], $usuario->senha)) {
             $this->mensagem->alerta("Os dados informados para o login estão incorretos!")->flash();
             return false;
         }
 
-        if($usuario->status != 1){
+        if ($usuario->status != 1) {
             $this->mensagem->alerta("Para fazer login, primeiro ative sua conta!")->flash();
             return false;
         }
 
-        if($usuario->level < $level){
+        if ($usuario->level < $level) {
             $this->mensagem->erro("Você não tem permissão para acessar essa área!")->flash();
             return false;
         }
@@ -66,8 +68,8 @@ class UsuarioModelo extends Modelo
 
     public function salvar(): bool
     {
-        if($this->busca("email = :e AND id != :id","e={$this->email}&id={$this->id}")->resultado()){
-            $this->mensagem->alerta("O e-mail ".$this->dados->email." já está cadastrado");
+        if ($this->busca("email = :e AND id != :id", "e={$this->email}&id={$this->id}")->resultado()) {
+            $this->mensagem->alerta("O e-mail " . $this->dados->email . " já está cadastrado");
             return false;
         }
 

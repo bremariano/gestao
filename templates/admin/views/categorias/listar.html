@@ -14,6 +14,13 @@
     </ol>
 </nav>
 {{flash()}}
+<form method="post" action="/blog/admin/categorias/listar">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="pesquisar" placeholder="Pesquise pelo titulo!"
+               aria-label="Recipient's username" aria-describedby="button-addon2">
+        <button class="btn btn-success" type="submit" id="button-addon2">Pesquisar</button>
+    </div>
+</form>
 <div class="card border-0 shadow-sm">
     <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
         <div>
@@ -42,9 +49,9 @@
                     <td>{{categoria.title}}</td>
                     <td class="text-center">
                         {% if categoria.status == 1 %}
-                        <i class="fa-solid fa-circle text-success"tooltip="tooltip" title="Ativo"></i>
+                        <i class="fa-solid fa-circle text-success" tooltip="tooltip" title="Ativo"></i>
                         {% else %}
-                        <i class="fa-solid fa-circle text-danger"tooltip="tooltip" title="Inativo"></i>
+                        <i class="fa-solid fa-circle text-danger" tooltip="tooltip" title="Inativo"></i>
                         {% endif %}
                     </td>
                     <td class="text-center">

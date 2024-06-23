@@ -10,13 +10,15 @@
                     <a href="{{ url() }}" class="nav-link px-2" tooltip="tooltip" title="Página Inicial">Home</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
                         Categorias
                     </a>
                     <ul class="dropdown-menu">
                         {% for categoria in categorias %}
                         <li>
-                            <a class="dropdown-item" href="{{url('categoria/'~categoria.slug)}}" tooltip="tooltip" title="{{categoria.titulo}}">
+                            <a class="dropdown-item" href="{{url('categoria/'~categoria.slug)}}" tooltip="tooltip"
+                               title="{{categoria.titulo}}">
                                 {{categoria.titulo}}
                             </a>
                         </li>
@@ -24,34 +26,40 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="{{ url('sobre-nos') }}" class="nav-link px-2 text-white" tooltip="tooltip" title="Sobre Nós">Sobre nós</a>
+                    <a href="{{ url('sobre-nos') }}" class="nav-link px-2 text-white" tooltip="tooltip"
+                       title="Sobre Nós">Sobre nós</a>
                 </li>
             </ul>
 
             <form data-url-busca="{{ url('buscar') }}" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-                <input type="search" name="busca" id="busca" class="form-control form-control-dark text-bg-dark" placeholder="Buscar..." aria-label="Search">
-            </form>            
+                <input type="search" name="busca" id="busca" class="form-control form-control-dark text-bg-dark"
+                       placeholder="Buscar..." aria-label="Search">
+            </form>
 
             <div class="text-end">
                 {% if usuario().level == 3 %}
                 <div class="btn-group">
 
-                    <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown"
+                            data-bs-display="static" aria-expanded="false">
                         <i class="fa-solid fa-user me-2"></i> {{usuario().nome}}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-lg-end">
                         <li>
-                            <a class="dropdown-item" href="{{url('admin/dashboard/')}}" tooltip="tooltip" title="Dashboard">
+                            <a class="dropdown-item" href="{{url('admin/dashboard/')}}" tooltip="tooltip"
+                               title="Dashboard">
                                 Dashboard
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{{url('admin/usuarios/editar/'~usuario().id)}}" tooltip="tooltip" title="Perfil">
+                            <a class="dropdown-item" href="{{url('admin/usuarios/editar/'~usuario().id)}}"
+                               tooltip="tooltip" title="Perfil">
                                 Perfil
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item text-danger" href="{{url('admin/sair')}}" tooltip="tooltip" title="Sair do Sistema">
+                            <a class="dropdown-item text-danger" href="{{url('admin/sair')}}" tooltip="tooltip"
+                               title="Sair do Sistema">
                                 Sair
                             </a>
                         </li>

@@ -31,7 +31,7 @@ class Conexao
                 ]);
             } catch (PDOException $ex) {
                 die("Erro de conexão:: " . $ex->getMessage());
-            }            
+            }
         }
         return self::$instancia;
     }
@@ -42,7 +42,7 @@ class Conexao
      */
     protected function __construct()
     {
-        
+
     }
 
     /**
@@ -51,7 +51,7 @@ class Conexao
      */
     private function __clone(): void
     {
-        
+
     }
 
 }

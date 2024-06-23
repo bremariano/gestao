@@ -1,6 +1,7 @@
 <?php
 
 namespace sistema\Modelo;
+
 use sistema\Nucleo\Modelo;
 
 /**
@@ -10,8 +11,8 @@ use sistema\Nucleo\Modelo;
  */
 class CategoriaModelo extends Modelo
 {
-public function __construct()
-{
-    parent::__construct('categoria');
-}
+    public function __construct()
+    {
+        parent::__construct('categoria');
+    }
 }

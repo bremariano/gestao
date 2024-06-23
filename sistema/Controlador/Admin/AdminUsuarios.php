@@ -19,10 +19,15 @@ class AdminUsuarios extends AdminControlador
      */
     public function listar(): void
     {
+        $pesquisar = null;
+        if (isset($_POST["pesquisar"])) {
+            $pesquisar = "nome like '%" . $_POST["pesquisar"] . "%'";
+        }
+
         $usuario = new UsuarioModelo();
 
         echo $this->template->renderizar('usuarios/listar.html', [
-            'usuarios' => $usuario->busca()->ordem('level DESC, status ASC')->resultado(true),
+            'usuarios' => $usuario->busca($pesquisar)->ordem('level DESC, status ASC')->resultado(true),
             'total' => [
                 'usuarios' => $usuario->busca('level != 3')->total(),
                 'usuariosAtivo' => $usuario->busca('status = 1 AND level != 3')->total(),
@@ -96,7 +101,7 @@ class AdminUsuarios extends AdminControlador
                     $this->mensagem->sucesso('Usuário atualizado com sucesso')->flash();
                     Helpers::redirecionar('admin/usuarios/listar');
                 } else {
-                 $usuario->mensagem()->flash();
+                    $usuario->mensagem()->flash();
                 }
             }
         }
@@ -125,8 +130,8 @@ class AdminUsuarios extends AdminControlador
             $this->mensagem->alerta('Informe um e-mail válido!')->flash();
             return false;
         }
-        if (!empty($dados['senha'])){
-            if (!Helpers::validarSenha($dados['senha'])){
+        if (!empty($dados['senha'])) {
+            if (!Helpers::validarSenha($dados['senha'])) {
                 $this->mensagem->alerta('A senha tem que ter entre 6 e 50 caracteres!')->flash();
                 return false;
             }

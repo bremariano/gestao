@@ -15,7 +15,7 @@ class Upload
     private ?string $nome;
     private ?string $subDiretorio;
     private ?int $tamanho;
-    private ?string $resultado = null ;
+    private ?string $resultado = null;
     private ?string $erro;
 
     /**

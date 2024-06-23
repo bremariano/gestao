@@ -27,7 +27,7 @@ class Sessao
      */
     public function criar(string $chave, mixed $valor): Sessao
     {
-        $_SESSION[$chave] = (is_array($valor) ? (object) $valor : $valor);
+        $_SESSION[$chave] = (is_array($valor) ? (object)$valor : $valor);
         return $this;
     }
 
@@ -37,7 +37,7 @@ class Sessao
      */
     public function carregar(): ?object
     {
-        return (object) $_SESSION;
+        return (object)$_SESSION;
     }
 
     /**
