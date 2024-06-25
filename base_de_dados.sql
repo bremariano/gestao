@@ -7,30 +7,28 @@ create table categoria
     status  int default 0 not null
 );
 
-create table categoria_2
-(
-    id      int          null,
-    title   varchar(255) null,
-    content text         null,
-    status  int          null
-);
-
 create table posts
 (
     id           int auto_increment
         primary key,
     categoria_id bigint        not null,
     titulo       varchar(255)  not null,
-    texto        text          null,
+    texto        text null,
     status       int default 1 not null
 );
 
-create table posts_2
+create table usuarios
 (
-    id           int          null,
-    categoria_id bigint       null,
-    titulo       varchar(255) null,
-    texto        text         null,
-    status       int          null
+    id            int auto_increment
+        primary key,
+    level         int      default 1                   not null,
+    nome          varchar(255)                         not null,
+    email         varchar(255)                         not null,
+    senha         varchar(255)                         not null,
+    status        int      default 0                   not null,
+    ultimo_login  datetime null,
+    cadastrado_em datetime default current_timestamp() not null,
+    atualizado_em datetime null,
+    constraint email
+        unique (email)
 );
-
